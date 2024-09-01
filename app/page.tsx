@@ -1,95 +1,63 @@
-import Image from "next/image";
-import styles from "./page.module.css";
+"use client"
+import { useState, useEffect } from 'react';
+
+type ImagesByFolder = {
+  [folder: string]: string[];
+};
 
 export default function Home() {
+  const [folders, setFolders] = useState<string[]>([]);
+  const [images, setImages] = useState<ImagesByFolder>({});
+  const [selectedFolder, setSelectedFolder] = useState<string>('');
+
+  useEffect(() => {
+    fetch('/api/folders')
+      .then(response => response.json())
+      .then(setFolders)
+      .catch(console.error);
+  }, []);
+
+  useEffect(() => {
+    fetch(`/api/images?folder=${encodeURIComponent(selectedFolder)}`)
+      .then(response => response.json())
+      .then(setImages)
+      .catch(console.error);
+  }, [selectedFolder]);
+
+  const handleUpdate = () => {
+    fetch('/api/update-image', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ folder: selectedFolder }),
+    })
+      .then(response => response.json())
+      .then(data => alert(data.message))
+      .catch(console.error);
+  };
+
   return (
-    <main className={styles.main}>
-      <div className={styles.description}>
-        <p>
-          Get started by editing&nbsp;
-          <code className={styles.code}>app/page.tsx</code>
-        </p>
-        <div>
-          <a
-            href="https://vercel.com?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            By{" "}
-            <Image
-              src="/vercel.svg"
-              alt="Vercel Logo"
-              className={styles.vercelLogo}
-              width={100}
-              height={24}
-              priority
-            />
-          </a>
-        </div>
+    <div>
+      <h1>Figma to Yandex.Cloud</h1>
+      <label htmlFor="folder-select">Выберите папку:</label>
+      <select id="folder-select" value={selectedFolder} onChange={e => setSelectedFolder(e.target.value)}>
+        <option value="">Все папки</option>
+        {folders.map(folder => (
+          <option key={folder} value={folder}>
+            {folder}
+          </option>
+        ))}
+      </select>
+      <button onClick={handleUpdate}>Обновить изображения</button>
+      <div id="image-groups">
+        {Object.keys(images).map(group => (
+          <div key={group}>
+            <h2>{group}</h2>
+            {images[group].map(url => (
+              <img key={url} src={url} style={{ maxWidth: '200px', margin: '10px' }} alt="Figma frame" />
+            ))}
+          </div>
+        ))}
       </div>
-
-      <div className={styles.center}>
-        <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js Logo"
-          width={180}
-          height={37}
-          priority
-        />
-      </div>
-
-      <div className={styles.grid}>
-        <a
-          href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Docs <span>-&gt;</span>
-          </h2>
-          <p>Find in-depth information about Next.js features and API.</p>
-        </a>
-
-        <a
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Learn <span>-&gt;</span>
-          </h2>
-          <p>Learn about Next.js in an interactive course with&nbsp;quizzes!</p>
-        </a>
-
-        <a
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Templates <span>-&gt;</span>
-          </h2>
-          <p>Explore starter templates for Next.js.</p>
-        </a>
-
-        <a
-          href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-          className={styles.card}
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <h2>
-            Deploy <span>-&gt;</span>
-          </h2>
-          <p>
-            Instantly deploy your Next.js site to a shareable URL with Vercel.
-          </p>
-        </a>
-      </div>
-    </main>
+    </div>
   );
 }
