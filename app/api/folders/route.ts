@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import { ListObjectsCommand } from '@aws-sdk/client-s3';
-import { s3Client } from '../update-image/route';
+import s3Client from '../../lib/s3Client';
 
 export async function GET() {
 	try {
@@ -10,10 +10,18 @@ export async function GET() {
 		});
 		const data = await s3Client.send(command);
 
-		const folders = data.CommonPrefixes.map(prefix => prefix.Prefix.slice(0, -1));
+		// Проверка на undefined и использование пустого массива по умолчанию
+		const folders = data.CommonPrefixes?.map(prefix => {
+			if (prefix.Prefix) {
+				return prefix.Prefix.slice(0, -1);
+			} else {
+				return ''; // Или другое подходящее значение в случае отсутствия `Prefix`
+			}
+		}) || [];
+
 		return NextResponse.json(folders);
 	} catch (error) {
 		console.error('Ошибка при получении списка папок:', error);
-		return NextResponse.error({ status: 500, body: 'Не удалось получить папки из бакета.' });
+		return new NextResponse('Не удалось получить папки из бакета.', { status: 500 });
 	}
 }

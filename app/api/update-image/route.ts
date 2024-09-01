@@ -1,15 +1,6 @@
 import { NextResponse } from 'next/server';
-import { S3Client, PutObjectCommand, ListObjectsCommand } from '@aws-sdk/client-s3';
-
-export const s3Client = new S3Client({
-	endpoint: process.env.ENDPOINT_URL,
-	credentials: {
-		accessKeyId: process.env.ACCESS_KEY,
-		secretAccessKey: process.env.SECRET_KEY,
-	},
-	forcePathStyle: true,
-	region: 'ru-central1',
-});
+import { PutObjectCommand } from '@aws-sdk/client-s3';
+import s3Client from '../../lib/s3Client';
 
 async function getFigmaFileData() {
 	const response = await fetch(`https://api.figma.com/v1/files/${process.env.FILE_KEY}`, {
@@ -51,7 +42,7 @@ export async function POST(req: Request) {
 		return NextResponse.json({ message: `Изображения успешно загружены для папки: ${folder || 'Все страницы'}!` });
 	} catch (error) {
 		console.error('Ошибка при обновлении изображений:', error);
-		return NextResponse.error({ status: 500, body: 'Произошла ошибка при обновлении изображений.' });
+		return new NextResponse('Произошла ошибка при обновлении изображений.', { status: 500 });
 	}
 }
 

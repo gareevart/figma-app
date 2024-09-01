@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect } from 'react';
+import styles from "./page.module.css";
 
 type ImagesByFolder = {
   [folder: string]: string[];
@@ -36,21 +37,23 @@ export default function Home() {
   };
 
   return (
-    <div>
+    <div className={styles.main}>
       <h1>Figma to Yandex.Cloud</h1>
-      <label htmlFor="folder-select">Выберите папку:</label>
-      <select id="folder-select" value={selectedFolder} onChange={e => setSelectedFolder(e.target.value)}>
-        <option value="">Все папки</option>
-        {folders.map(folder => (
-          <option key={folder} value={folder}>
-            {folder}
-          </option>
-        ))}
-      </select>
-      <button onClick={handleUpdate}>Обновить изображения</button>
+      <div className={styles.filter}>
+        <label htmlFor="folder-select">Выберите папку:</label>
+        <select id="folder-select" value={selectedFolder} onChange={e => setSelectedFolder(e.target.value)}>
+          <option value="">Все папки</option>
+          {folders.map(folder => (
+            <option key={folder} value={folder}>
+              {folder}
+            </option>
+          ))}
+        </select>
+        <button onClick={handleUpdate}>Обновить изображения</button>
+      </div>
       <div id="image-groups">
         {Object.keys(images).map(group => (
-          <div key={group}>
+          <div className={styles.card} key={group}>
             <h2>{group}</h2>
             {images[group].map(url => (
               <img key={url} src={url} style={{ maxWidth: '200px', margin: '10px' }} alt="Figma frame" />
