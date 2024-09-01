@@ -1,6 +1,7 @@
 "use client"
 import { useState, useEffect } from 'react';
 import styles from "./page.module.css";
+import Link from 'next/link';
 
 type ImagesByFolder = {
   [folder: string]: string[];
@@ -19,6 +20,7 @@ export default function Home() {
   }, []);
 
   useEffect(() => {
+    console.log('Selected Folder:', selectedFolder);
     fetch(`/api/images?folder=${encodeURIComponent(selectedFolder)}`)
       .then(response => response.json())
       .then(setImages)
@@ -50,6 +52,11 @@ export default function Home() {
           ))}
         </select>
         <button onClick={handleUpdate}>Обновить изображения</button>
+        <Link href="/changelog" passHref>
+          <button className={styles.changelogbutton}>
+            Changelog
+          </button>
+        </Link>
       </div>
       <div id="image-groups">
         {Object.keys(images).map(group => (

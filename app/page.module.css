@@ -118,6 +118,21 @@
   position: relative;
 }
 
+.changelogbutton {
+  background-color: #cecece;
+  color: black;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.changelogbutton:hover {
+  background-color: #838282;
+}
+
 /* Enable hover only on non-touch devices */
 @media (hover: hover) and (pointer: fine) {
   .card:hover {
