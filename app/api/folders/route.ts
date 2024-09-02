@@ -11,13 +11,8 @@ export async function GET() {
 		const data = await s3Client.send(command);
 
 		// Проверка на undefined и использование пустого массива по умолчанию
-		const folders = data.CommonPrefixes?.map(prefix => {
-			if (prefix.Prefix) {
-				return prefix.Prefix.slice(0, -1);
-			} else {
-				return ''; // Или другое подходящее значение в случае отсутствия `Prefix`
-			}
-		}) || [];
+		const folders = data.CommonPrefixes?.map(prefix => prefix.Prefix?.slice(0, -1) || '') || [];
+		console.log('Received CommonPrefixes:', data.CommonPrefixes);
 
 		return NextResponse.json(folders);
 	} catch (error) {
