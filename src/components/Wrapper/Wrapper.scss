@@ -1,3 +1,4 @@
+@use '../../styles/variables.scss' as variables;
 $block: '.wrapper';
 
 #{$block} {
@@ -22,6 +23,7 @@ $block: '.wrapper';
         justify-content: center;
         flex: 1;
         margin-bottom: 56px;
+        max-width: map-get(variables.$gridBreakpoints, 'xl');
     }
 
     &__header {

@@ -5,7 +5,6 @@ $block: '.filters';
 	flex-direction: column;
 	align-items: center;
 	min-height: 100%;
-	padding: 20px;
 	box-sizing: border-box;
 
 	&__theme-button {
@@ -67,10 +66,39 @@ $block: '.filters';
 		gap: 16px;
 	}
 
+	&__image-item {
+		position: relative;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 4px;
+	}
+
 	&__image {
 		display: flex;
 		width: auto;
 		height: auto;
+	}
+
+	&__copy-button {
+		position: absolute;
+		top: 8px;
+		right: 8px;
+		opacity: 0;
+		/* Hide button by default */
+		transition: opacity 0.3s ease-in-out;
+		/* Smooth transition for hover effect */
+		pointer-events: none;
+	}
+
+	.filters__image-item:hover .filters__copy-button {
+		opacity: 1;
+		pointer-events: auto;
+	}
+
+	&__button-wrapper {
+		display: flex;
+		align-items: center;
+		gap: 12px;
 	}
 
 	&__gravity-logo {

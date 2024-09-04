@@ -116,9 +116,9 @@ export const Filters: React.FC = () => {
 										<div className={b('image-item')} key={url}>
 											<Image
 												className={b('image')}
-												priority={false}
+												priority={true}
 												src={url}
-												width={200}
+												width={230}
 												height={200}
 												alt={`Image from ${group}`}
 											/>
