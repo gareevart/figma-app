@@ -1,0 +1,110 @@
+$block: '.filters';
+
+#{$block} {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	min-height: 100%;
+	padding: 20px;
+	box-sizing: border-box;
+
+	&__theme-button {
+		align-self: flex-end;
+		margin-bottom: 20px;
+	}
+
+	&__layout {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		flex: 1;
+		margin-bottom: 56px;
+	}
+
+	&__header {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+	}
+
+	&__title {
+		margin-bottom: 12px;
+		font-size: 18px;
+		line-height: 22px;
+	}
+
+	&__filter {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 12px;
+		padding-bottom: 24px;
+	}
+
+	&__select {
+		width: 280px;
+	}
+
+	&__cards {
+		display: flex;
+		flex-direction: column;
+		padding: 16px;
+	}
+
+	&__card {
+		display: flex;
+		align-items: stretch;
+		margin-bottom: 20px;
+		flex-direction: column;
+		flex-wrap: wrap;
+	}
+
+	&__image-group {
+		display: flex;
+		flex-wrap: wrap;
+		flex-direction: row;
+		align-items: flex-start;
+		gap: 16px;
+	}
+
+	&__image {
+		display: flex;
+		width: auto;
+		height: auto;
+	}
+
+	&__gravity-logo {
+		width: 260px;
+		height: 55px;
+		background-image: url('../../assets/gravity-logo-light.svg');
+		background-size: contain;
+		background-position: center;
+		background-repeat: no-repeat;
+
+		&_dark {
+			background-image: url('../../assets/gravity-logo-dark.svg');
+		}
+	}
+
+	&__next-logo {
+		width: 160px;
+		height: 32px;
+		margin-top: 12px;
+		background-image: url('../../assets/next-logo-light.svg');
+		background-size: contain;
+		background-position: center;
+		background-repeat: no-repeat;
+
+		&_dark {
+			background-image: url('../../assets/next-logo-dark.svg');
+		}
+	}
+
+	&__content {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
+		margin-top: 40px;
+	}
+}
