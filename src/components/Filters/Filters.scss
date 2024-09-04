@@ -74,21 +74,15 @@ $block: '.filters';
 
 	.filters__image-item {
 		position: relative;
-		/* Make the container relative for absolute positioning */
 	}
 
 	.filters__copy-button {
 		position: absolute;
 		top: 8px;
-		/* Adjust as needed */
 		right: 8px;
-		/* Adjust as needed */
 		opacity: 0;
-		/* Hide button by default */
 		transition: opacity 0.3s ease-in-out;
-		/* Smooth transition for hover effect */
 		pointer-events: none;
-		/* Prevent button from being clicked when not visible */
 	}
 
 	.filters__image-item:hover .filters__copy-button {
@@ -96,6 +90,11 @@ $block: '.filters';
 		/* Show button on hover */
 		pointer-events: auto;
 		/* Allow button to be clicked when visible */
+	}
+
+	&__button-wrapper {
+		display: flex;
+		gap: 12px;
 	}
 
 	&__gravity-logo {

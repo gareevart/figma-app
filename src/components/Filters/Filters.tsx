@@ -18,7 +18,7 @@ export const Filters: React.FC = () => {
 	const [selectedFolder, setSelectedFolder] = useState<string>('');
 	const [updating, setUpdating] = useState<boolean>(false);
 
-	const { add } = useToaster(); // Используем хук useToaster
+	const { add } = useToaster(); // Use the useToaster hook
 
 	useEffect(() => {
 		fetch('/api/folders')
@@ -107,35 +107,37 @@ export const Filters: React.FC = () => {
 				</div>
 
 				<div id="image-groups">
-					{Object.keys(images).map((group) => (
-						<div className={b('card')} key={group}>
-							<Card className={b('cards')} view="filled" type="container" size="l">
-								<div className={b('title')}>{group}</div>
-								<div className={b('image-group')}>
-									{images[group].map((url) => (
-										<div className={b('image-item')} key={url}>
-											<Image
-												className={b('image')}
-												priority={false}
-												src={url}
-												width={200}
-												height={200}
-												alt={`Image from ${group}`}
-											/>
-											<Button
-												className={b('copy-button')}
-												size="m"
-												view="outlined"
-												onClick={() => copyToClipboard(url)}
-											>
-												<Icon data={Copy} />
-											</Button>
-										</div>
-									))}
-								</div>
-							</Card>
-						</div>
-					))}
+					{Object.keys(images)
+						.filter((group) => !selectedFolder || group === selectedFolder)
+						.map((group) => (
+							<div className={b('card')} key={group}>
+								<Card className={b('cards')} view="filled" type="container" size="l">
+									<div className={b('title')}>{group}</div>
+									<div className={b('image-group')}>
+										{images[group].map((url) => (
+											<div className={b('image-item')} key={url}>
+												<Image
+													className={b('image')}
+													priority={false}
+													src={url}
+													width={200}
+													height={200}
+													alt={`Image from ${group}`}
+												/>
+												<Button
+													className={b('copy-button')}
+													size="m"
+													view="outlined"
+													onClick={() => copyToClipboard(url)}
+												>
+													<Icon data={Copy} />
+												</Button>
+											</div>
+										))}
+									</div>
+								</Card>
+							</div>
+						))}
 				</div>
 			</div>
 		</div>
