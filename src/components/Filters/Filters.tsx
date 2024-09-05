@@ -18,8 +18,9 @@ export const Filters: React.FC = () => {
 	const [selectedFolder, setSelectedFolder] = useState<string>('');
 	const [updating, setUpdating] = useState<boolean>(false);
 
-	const { add } = useToaster(); // Use the useToaster hook
+	const { add } = useToaster(); // Используем хук useToaster
 
+	// Загрузка списка папок при первой загрузке
 	useEffect(() => {
 		fetch('/api/folders')
 			.then((response) => response.json())
@@ -27,11 +28,17 @@ export const Filters: React.FC = () => {
 			.catch(console.error);
 	}, []);
 
-	useEffect(() => {
+	// Загрузка изображений на основе выбранной папки
+	const loadImages = () => {
 		fetch(`/api/images?folder=${encodeURIComponent(selectedFolder)}`)
 			.then((response) => response.json())
 			.then(setImages)
 			.catch(console.error);
+	};
+
+	// Перезагрузка изображений при изменении выбранной папки
+	useEffect(() => {
+		loadImages();
 	}, [selectedFolder]);
 
 	const handleUpdate = () => {
@@ -44,15 +51,17 @@ export const Filters: React.FC = () => {
 			.then((response) => response.json())
 			.then((data) => {
 				add({
-					name: 'copy-success',
+					name: 'update-success',
 					title: data.message,
 					type: 'success',
 				});
+				// Повторная загрузка изображений после успешного обновления
+				loadImages();
 				setUpdating(false);
 			})
 			.catch((error) => {
 				add({
-					name: 'copy-error',
+					name: 'update-error',
 					title: 'Ошибка обновления изображений',
 					type: 'error',
 				});
