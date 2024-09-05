@@ -1,6 +1,5 @@
-'use client';
+import React, { useState, useEffect } from 'react';
 import block from 'bem-cn-lite';
-import { useState, useEffect } from 'react';
 import { Button, Select, Icon, Card, Loader, useToaster } from '@gravity-ui/uikit';
 import { ArrowRotateRight, Copy } from '@gravity-ui/icons';
 import Image from 'next/image';
@@ -17,8 +16,9 @@ export const Filters: React.FC = () => {
 	const [images, setImages] = useState<ImagesByFolder>({});
 	const [selectedFolder, setSelectedFolder] = useState<string>('');
 	const [updating, setUpdating] = useState<boolean>(false);
+	const [cacheBuster, setCacheBuster] = useState<string>(''); // Для сброса кеша
 
-	const { add } = useToaster(); // Используем хук useToaster
+	const { add } = useToaster();
 
 	// Загрузка списка папок при первой загрузке
 	useEffect(() => {
@@ -28,7 +28,7 @@ export const Filters: React.FC = () => {
 			.catch(console.error);
 	}, []);
 
-	// Загрузка изображений на основе выбранной папки
+	// Функция загрузки изображений с учетом выбранной папки
 	const loadImages = () => {
 		fetch(`/api/images?folder=${encodeURIComponent(selectedFolder)}`)
 			.then((response) => response.json())
@@ -55,7 +55,9 @@ export const Filters: React.FC = () => {
 					title: data.message,
 					type: 'success',
 				});
-				// Повторная загрузка изображений после успешного обновления
+				// Обновляем кеш-бастер после обновления изображений, чтобы сбросить кеш
+				setCacheBuster(`?cb=${Date.now()}`);
+				// Перезагружаем изображения
 				loadImages();
 				setUpdating(false);
 			})
@@ -116,6 +118,7 @@ export const Filters: React.FC = () => {
 				</div>
 
 				<div id="image-groups">
+					{/* Фильтруем и отображаем изображения на основе выбранной папки */}
 					{Object.keys(images)
 						.filter((group) => !selectedFolder || group === selectedFolder)
 						.map((group) => (
@@ -125,10 +128,11 @@ export const Filters: React.FC = () => {
 									<div className={b('image-group')}>
 										{images[group].map((url) => (
 											<div className={b('image-item')} key={url}>
+												{/* Добавляем cacheBuster для каждой картинки */}
 												<Image
 													className={b('image')}
 													priority={false}
-													src={url}
+													src={`${url}${cacheBuster}`}
 													width={200}
 													height={200}
 													alt={`Image from ${group}`}
