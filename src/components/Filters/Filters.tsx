@@ -28,14 +28,11 @@ export const Filters: React.FC = () => {
 	}, []);
 
 	// Функция загрузки изображений с учетом выбранной папки
-	const loadImages = async () => {
-		const res = await fetch(`/api/images?folder=${encodeURIComponent(selectedFolder)}`, {
-			next: {
-				revalidate: 3600, // 1 час
-			},
-		});
-		const data = await res.json();
-		setImages(data);
+	const loadImages = () => {
+		fetch(`/api/images?folder=${encodeURIComponent(selectedFolder)}`)
+			.then((response) => response.json())
+			.then(setImages)
+			.catch(console.error);
 	};
 
 	// Перезагрузка изображений при изменении выбранной папки
