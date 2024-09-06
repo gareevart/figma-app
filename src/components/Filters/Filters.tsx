@@ -16,7 +16,6 @@ export const Filters: React.FC = () => {
 	const [images, setImages] = useState<ImagesByFolder>({});
 	const [selectedFolder, setSelectedFolder] = useState<string>('');
 	const [updating, setUpdating] = useState<boolean>(false);
-	const [cacheBuster, setCacheBuster] = useState<string>(''); // Для сброса кеша
 
 	const { add } = useToaster();
 
@@ -29,11 +28,14 @@ export const Filters: React.FC = () => {
 	}, []);
 
 	// Функция загрузки изображений с учетом выбранной папки
-	const loadImages = () => {
-		fetch(`/api/images?folder=${encodeURIComponent(selectedFolder)}`)
-			.then((response) => response.json())
-			.then(setImages)
-			.catch(console.error);
+	const loadImages = async () => {
+		const res = await fetch(`/api/images?folder=${encodeURIComponent(selectedFolder)}`, {
+			next: {
+				revalidate: 3600, // 1 час
+			},
+		});
+		const data = await res.json();
+		setImages(data);
 	};
 
 	// Перезагрузка изображений при изменении выбранной папки
@@ -55,9 +57,6 @@ export const Filters: React.FC = () => {
 					title: data.message,
 					type: 'success',
 				});
-				// Обновляем кеш-бастер после обновления изображений, чтобы сбросить кеш
-				setCacheBuster(`?cb=${Date.now()}`);
-				// Перезагружаем изображения
 				loadImages();
 				setUpdating(false);
 			})
@@ -118,7 +117,6 @@ export const Filters: React.FC = () => {
 				</div>
 
 				<div id="image-groups">
-					{/* Фильтруем и отображаем изображения на основе выбранной папки */}
 					{Object.keys(images)
 						.filter((group) => !selectedFolder || group === selectedFolder)
 						.map((group) => (
@@ -128,19 +126,18 @@ export const Filters: React.FC = () => {
 									<div className={b('image-group')}>
 										{images[group].map((url) => (
 											<div className={b('image-item')} key={url}>
-												{/* Добавляем cacheBuster для каждой картинки */}
 												<Image
 													className={b('image')}
-													priority={false}
-													src={`${url}${cacheBuster}`}
+													src={url}
 													width={200}
 													height={200}
 													alt={`Image from ${group}`}
+													priority={true}
 												/>
 												<Button
 													className={b('copy-button')}
 													size="m"
-													view="outlined"
+													view="normal-contrast"
 													onClick={() => copyToClipboard(url)}
 												>
 													<Icon data={Copy} />
