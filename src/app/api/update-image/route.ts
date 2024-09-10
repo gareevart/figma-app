@@ -49,7 +49,7 @@ export async function POST(req: Request) {
 async function downloadAndSaveFrameImages(frames: any[], pageName: string) {
 	const frameIds = frames.map((frame) => frame.id).join(',');
 	const url = new URL(`https://api.figma.com/v1/images/${process.env.FILE_KEY}`);
-	url.search = new URLSearchParams({ ids: frameIds, scale: '1' }).toString();
+	url.search = new URLSearchParams({ ids: frameIds, scale: '2' }).toString();
 
 	const headers = new Headers({
 		'X-Figma-Token': process.env.FIGMA_TOKEN || '',
